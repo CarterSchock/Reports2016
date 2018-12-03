@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RptDataSource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="PerviewDataMartNew">
+  <ConnectionProperties>
+    <Extension>SQL</Extension>
+    <ConnectString>Data Source=localhost;Initial Catalog=PerViewDataMart</ConnectString>
+  </ConnectionProperties>
+  <DataSourceID>37a9f6c0-d63f-4111-b3b9-3d0d4a6eecbf</DataSourceID>
+</RptDataSource>

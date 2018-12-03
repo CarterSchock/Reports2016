@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.136
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{F14B399A-7131-4C87-9E4B-1186C45EF12D}") = "PerViewReports", "PerViewReports\PerViewReports.rptproj", "{665B1CDF-E1DD-41C1-84F8-C751ED2CE25B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Default = Debug|Default
+		DebugLocal|Default = DebugLocal|Default
+		Release|Default = Release|Default
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{665B1CDF-E1DD-41C1-84F8-C751ED2CE25B}.Debug|Default.ActiveCfg = Debug
+		{665B1CDF-E1DD-41C1-84F8-C751ED2CE25B}.Debug|Default.Build.0 = Debug
+		{665B1CDF-E1DD-41C1-84F8-C751ED2CE25B}.Debug|Default.Deploy.0 = Debug
+		{665B1CDF-E1DD-41C1-84F8-C751ED2CE25B}.DebugLocal|Default.ActiveCfg = DebugLocal
+		{665B1CDF-E1DD-41C1-84F8-C751ED2CE25B}.DebugLocal|Default.Build.0 = DebugLocal
+		{665B1CDF-E1DD-41C1-84F8-C751ED2CE25B}.Release|Default.ActiveCfg = Release
+		{665B1CDF-E1DD-41C1-84F8-C751ED2CE25B}.Release|Default.Build.0 = Release
+		{665B1CDF-E1DD-41C1-84F8-C751ED2CE25B}.Release|Default.Deploy.0 = Release
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {89942D65-BAF2-4B27-8CEC-12FE6F0F9C24}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,959 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner" xmlns:cl="http://schemas.microsoft.com/sqlserver/reporting/2010/01/componentdefinition" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2010/01/reportdefinition">
+  <AutoRefresh>0</AutoRefresh>
+  <DataSources>
+    <DataSource Name="PerViewDataMart">
+      <DataSourceReference>https://perview.app.parallon.com/PWA/ProjectBICenter/Data Connections for PerformancePoint/English (United States)/PerViewDataMart.rsds</DataSourceReference>
+      <rd:SecurityType>None</rd:SecurityType>
+      <rd:DataSourceID>dc1b49fd-77a5-41ba-966c-bb673bcd149d</rd:DataSourceID>
+    </DataSource>
+  </DataSources>
+  <DataSets>
+    <DataSet Name="Projects">
+      <Query>
+        <DataSourceName>PerViewDataMart</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@ParmParentProgram">
+            <Value>=Parameters!ParmParentProgram.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@ParmProjectsAllowed">
+            <Value>=Parameters!ParmProjectsAllowed.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandText>select distinct
+
+[ProjectName], 
+[ProjectUID] as Value
+
+from [dbo].[Dim_Project]
+
+where ProjectActiveStatus = 'In Progress'
+and [Parent Program] IN (@ParmParentProgram) 
+and [ProjectUID] IN (@ParmProjectsAllowed)
+
+
+order by [ProjectName]</CommandText>
+        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
+      </Query>
+      <Fields>
+        <Field Name="ProjectName">
+          <DataField>ProjectName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Value">
+          <DataField>Value</DataField>
+          <rd:TypeName>System.Guid</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="uspReportsProgramStatus_OHPrgm_PS">
+      <Query>
+        <DataSourceName>PerViewDataMart</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@ParmParentProgram">
+            <Value>=Parameters!ParmParentProgram.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@ParmProjects">
+            <Value>=Parameters!ParmProjects.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@ParmReportFinishDate">
+            <Value>=Parameters!ParmReportFinishDate.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@ParmBaselineNonBaseline">
+            <Value>=Parameters!ParmBaselineNonBaseline.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandType>StoredProcedure</CommandType>
+        <CommandText>uspReportsProgramStatus_OHPrgm_PS</CommandText>
+        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
+      </Query>
+      <Fields>
+        <Field Name="SchedInd">
+          <DataField>SchedInd</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="MilestonesInd">
+          <DataField>MilestonesInd</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="DeliverablesInd">
+          <DataField>DeliverablesInd</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="SchedRawScore">
+          <DataField>SchedRawScore</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="NumberOfIncompleteTasks">
+          <DataField>NumberOfIncompleteTasks</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="NumberOfTasks">
+          <DataField>NumberOfTasks</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="MilestonesRawScore">
+          <DataField>MilestonesRawScore</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="NumberOfIncompleteMilestones">
+          <DataField>NumberOfIncompleteMilestones</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="NumberOfMilestones">
+          <DataField>NumberOfMilestones</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="DeliverablesRawScore">
+          <DataField>DeliverablesRawScore</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="NumberOfIncompleteDeliverables">
+          <DataField>NumberOfIncompleteDeliverables</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="NumberOfDeliverables">
+          <DataField>NumberOfDeliverables</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="OverallHealthScore">
+          <DataField>OverallHealthScore</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="Programs">
+      <Query>
+        <DataSourceName>PerViewDataMart</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@ParmProjectsAllowed">
+            <Value>=Parameters!ParmProjectsAllowed.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandText>select distinct
+
+[Parent Program]
+
+from [dbo].[Dim_Project]
+
+where ProjectActiveStatus = 'In Progress'
+and [ProjectUID] IN (@ParmProjectsAllowed)</CommandText>
+        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
+      </Query>
+      <Fields>
+        <Field Name="Parent_Program">
+          <DataField>Parent Program</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="dsProjectsAllowed">
+      <Query>
+        <DataSourceName>PerViewDataMart</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@UserID">
+            <Value>=Parameters!UserID.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandType>StoredProcedure</CommandType>
+        <CommandText>uspReportsProjectSecurity</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="ProjectName">
+          <DataField>ProjectName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Proj_UID_Allowed">
+          <DataField>Proj_UID_Allowed</DataField>
+          <rd:TypeName>System.Guid</rd:TypeName>
+        </Field>
+        <Field Name="ProjectActiveStatus">
+          <DataField>ProjectActiveStatus</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ResourceUID">
+          <DataField>ResourceUID</DataField>
+          <rd:TypeName>System.Guid</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+  </DataSets>
+  <ReportSections>
+    <ReportSection>
+      <Body>
+        <ReportItems>
+          <Tablix Name="Tablix3">
+            <TablixBody>
+              <TablixColumns>
+                <TablixColumn>
+                  <Width>2.64063in</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>6.48425in</Width>
+                </TablixColumn>
+              </TablixColumns>
+              <TablixRows>
+                <TablixRow>
+                  <Height>0.42708in</Height>
+                  <TablixCells>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox4">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Program</Value>
+                                  <Style>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>16pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                    <Color>White</Color>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox4</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>#7292cc</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <BackgroundColor>#4c68a2</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox3">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Overall Health</Value>
+                                  <Style>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>16pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                    <Color>White</Color>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox3</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>#7292cc</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <BackgroundColor>#4c68a2</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                  </TablixCells>
+                </TablixRow>
+                <TablixRow>
+                  <Height>1.08333in</Height>
+                  <TablixCells>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox5">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Parameters!ParmParentProgram.Value</Value>
+                                  <Style>
+                                    <FontFamily />
+                                    <FontSize>16pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox5</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <GaugePanel Name="GaugePanel13">
+                          <RadialGauges>
+                            <RadialGauge Name="RadialGauge1">
+                              <PivotY>75</PivotY>
+                              <GaugeScales>
+                                <RadialScale Name="RadialScale1">
+                                  <Radius>70</Radius>
+                                  <StartAngle>90</StartAngle>
+                                  <SweepAngle>180</SweepAngle>
+                                  <GaugePointers>
+                                    <RadialPointer Name="RadialPointer1">
+                                      <PointerCap>
+                                        <Style>
+                                          <BackgroundColor>White</BackgroundColor>
+                                          <BackgroundGradientType>DiagonalLeft</BackgroundGradientType>
+                                          <BackgroundGradientEndColor>DimGray</BackgroundGradientEndColor>
+                                          <BackgroundHatchType>None</BackgroundHatchType>
+                                        </Style>
+                                        <CapImage>
+                                          <OffsetX>0pt</OffsetX>
+                                          <OffsetY>0pt</OffsetY>
+                                          <Source>External</Source>
+                                          <Value />
+                                        </CapImage>
+                                        <OnTop>true</OnTop>
+                                        <CapStyle>RoundedWithWideIndentation</CapStyle>
+                                        <Width>33</Width>
+                                      </PointerCap>
+                                      <Style>
+                                        <Border>
+                                          <Style>None</Style>
+                                        </Border>
+                                        <BackgroundColor>Black</BackgroundColor>
+                                        <BackgroundGradientType>None</BackgroundGradientType>
+                                        <BackgroundGradientEndColor>Orange</BackgroundGradientEndColor>
+                                        <BackgroundHatchType>None</BackgroundHatchType>
+                                        <ShadowOffset>1pt</ShadowOffset>
+                                      </Style>
+                                      <GaugeInputValue>
+                                        <Value>=Sum(Fields!OverallHealthScore.Value)</Value>
+                                        <Multiplier>1</Multiplier>
+                                      </GaugeInputValue>
+                                      <PointerImage>
+                                        <OffsetX>0pt</OffsetX>
+                                        <OffsetY>0pt</OffsetY>
+                                        <Source>External</Source>
+                                        <Value />
+                                      </PointerImage>
+                                      <MarkerLength>25</MarkerLength>
+                                      <MarkerStyle>Wedge</MarkerStyle>
+                                      <Placement>Inside</Placement>
+                                      <Width>18</Width>
+                                    </RadialPointer>
+                                  </GaugePointers>
+                                  <ScaleRanges>
+                                    <ScaleRange Name="RadialRange1">
+                                      <Style>
+                                        <Border>
+                                          <Color>Silver</Color>
+                                          <Style>None</Style>
+                                        </Border>
+                                        <BackgroundColor>Red</BackgroundColor>
+                                        <BackgroundGradientType>DiagonalLeft</BackgroundGradientType>
+                                        <BackgroundGradientEndColor>Red</BackgroundGradientEndColor>
+                                        <BackgroundHatchType>None</BackgroundHatchType>
+                                        <ShadowOffset>0pt</ShadowOffset>
+                                      </Style>
+                                      <BackgroundGradientType>None</BackgroundGradientType>
+                                      <DistanceFromScale>30</DistanceFromScale>
+                                      <StartValue>
+                                        <Value>0.7</Value>
+                                        <Multiplier>1</Multiplier>
+                                      </StartValue>
+                                      <EndValue>
+                                        <Value>0.8</Value>
+                                        <Multiplier>1</Multiplier>
+                                      </EndValue>
+                                      <StartWidth>30</StartWidth>
+                                      <EndWidth>30</EndWidth>
+                                      <Placement>Inside</Placement>
+                                    </ScaleRange>
+                                    <ScaleRange Name="RadialRange2">
+                                      <Style>
+                                        <Border>
+                                          <Color>Silver</Color>
+                                          <Style>None</Style>
+                                        </Border>
+                                        <BackgroundColor>DarkGreen</BackgroundColor>
+                                        <BackgroundGradientType>DiagonalLeft</BackgroundGradientType>
+                                        <BackgroundGradientEndColor>Red</BackgroundGradientEndColor>
+                                        <BackgroundHatchType>None</BackgroundHatchType>
+                                        <ShadowOffset>0pt</ShadowOffset>
+                                      </Style>
+                                      <BackgroundGradientType>None</BackgroundGradientType>
+                                      <DistanceFromScale>30</DistanceFromScale>
+                                      <StartValue>
+                                        <Value>0.9</Value>
+                                        <Multiplier>1</Multiplier>
+                                      </StartValue>
+                                      <EndValue>
+                                        <Value>1</Value>
+                                        <Multiplier>1</Multiplier>
+                                      </EndValue>
+                                      <StartWidth>30</StartWidth>
+                                      <EndWidth>30</EndWidth>
+                                      <Placement>Inside</Placement>
+                                    </ScaleRange>
+                                    <ScaleRange Name="RadialRange3">
+                                      <Style>
+                                        <Border>
+                                          <Color>Silver</Color>
+                                          <Style>Solid</Style>
+                                        </Border>
+                                        <BackgroundColor>Yellow</BackgroundColor>
+                                        <BackgroundGradientType>DiagonalLeft</BackgroundGradientType>
+                                        <BackgroundGradientEndColor>Red</BackgroundGradientEndColor>
+                                        <BackgroundHatchType>None</BackgroundHatchType>
+                                        <ShadowOffset>0pt</ShadowOffset>
+                                      </Style>
+                                      <BackgroundGradientType>None</BackgroundGradientType>
+                                      <DistanceFromScale>30</DistanceFromScale>
+                                      <StartValue>
+                                        <Value>0.8</Value>
+                                        <Multiplier>1</Multiplier>
+                                      </StartValue>
+                                      <EndValue>
+                                        <Value>0.9</Value>
+                                        <Multiplier>1</Multiplier>
+                                      </EndValue>
+                                      <StartWidth>30</StartWidth>
+                                      <EndWidth>30</EndWidth>
+                                      <Placement>Inside</Placement>
+                                    </ScaleRange>
+                                    <ScaleRange Name="RadialRange4">
+                                      <Style>
+                                        <Border>
+                                          <Color>Silver</Color>
+                                          <Style>None</Style>
+                                        </Border>
+                                        <BackgroundColor>Yellow</BackgroundColor>
+                                        <BackgroundGradientType>DiagonalLeft</BackgroundGradientType>
+                                        <BackgroundGradientEndColor>DarkGreen</BackgroundGradientEndColor>
+                                        <BackgroundHatchType>None</BackgroundHatchType>
+                                        <ShadowOffset>0pt</ShadowOffset>
+                                      </Style>
+                                      <BackgroundGradientType>LeftRight</BackgroundGradientType>
+                                      <DistanceFromScale>30</DistanceFromScale>
+                                      <StartValue>
+                                        <Value>1.6</Value>
+                                        <Multiplier>1</Multiplier>
+                                      </StartValue>
+                                      <EndValue>
+                                        <Value>1.66</Value>
+                                        <Multiplier>1</Multiplier>
+                                      </EndValue>
+                                      <StartWidth>30</StartWidth>
+                                      <EndWidth>30</EndWidth>
+                                      <Placement>Inside</Placement>
+                                    </ScaleRange>
+                                    <ScaleRange Name="RadialRange5">
+                                      <Style>
+                                        <Border>
+                                          <Color>Silver</Color>
+                                          <Style>None</Style>
+                                        </Border>
+                                        <BackgroundColor>Red</BackgroundColor>
+                                        <BackgroundGradientType>DiagonalLeft</BackgroundGradientType>
+                                        <BackgroundGradientEndColor>Yellow</BackgroundGradientEndColor>
+                                        <BackgroundHatchType>None</BackgroundHatchType>
+                                        <ShadowOffset>0pt</ShadowOffset>
+                                      </Style>
+                                      <BackgroundGradientType>LeftRight</BackgroundGradientType>
+                                      <DistanceFromScale>30</DistanceFromScale>
+                                      <StartValue>
+                                        <Value>2.34</Value>
+                                        <Multiplier>1</Multiplier>
+                                      </StartValue>
+                                      <EndValue>
+                                        <Value>2.4</Value>
+                                        <Multiplier>1</Multiplier>
+                                      </EndValue>
+                                      <StartWidth>30</StartWidth>
+                                      <EndWidth>30</EndWidth>
+                                      <Placement>Inside</Placement>
+                                    </ScaleRange>
+                                  </ScaleRanges>
+                                  <Style>
+                                    <Border>
+                                      <Style>None</Style>
+                                    </Border>
+                                    <BackgroundColor>CornflowerBlue</BackgroundColor>
+                                    <BackgroundGradientType>None</BackgroundGradientType>
+                                    <BackgroundGradientEndColor>White</BackgroundGradientEndColor>
+                                    <BackgroundHatchType>None</BackgroundHatchType>
+                                    <ShadowOffset>0pt</ShadowOffset>
+                                  </Style>
+                                  <Interval>0.05</Interval>
+                                  <IntervalOffset>NaN</IntervalOffset>
+                                  <MaximumValue>
+                                    <Value>1</Value>
+                                    <Multiplier>1</Multiplier>
+                                  </MaximumValue>
+                                  <MinimumValue>
+                                    <Value>0.7</Value>
+                                    <Multiplier>1</Multiplier>
+                                  </MinimumValue>
+                                  <GaugeMajorTickMarks>
+                                    <Interval>NaN</Interval>
+                                    <IntervalOffset>NaN</IntervalOffset>
+                                    <Style>
+                                      <Border>
+                                        <Color>DimGray</Color>
+                                        <Style>None</Style>
+                                      </Border>
+                                      <BackgroundColor>DimGray</BackgroundColor>
+                                    </Style>
+                                    <Placement>Cross</Placement>
+                                    <TickMarkImage>
+                                      <Source>External</Source>
+                                      <Value />
+                                    </TickMarkImage>
+                                    <Length>26</Length>
+                                    <Width>2</Width>
+                                  </GaugeMajorTickMarks>
+                                  <GaugeMinorTickMarks>
+                                    <Interval>NaN</Interval>
+                                    <IntervalOffset>NaN</IntervalOffset>
+                                    <Style>
+                                      <Border>
+                                        <Color>DimGray</Color>
+                                        <Style>None</Style>
+                                      </Border>
+                                      <BackgroundColor>DimGray</BackgroundColor>
+                                    </Style>
+                                    <Placement>Cross</Placement>
+                                    <TickMarkImage>
+                                      <Source>External</Source>
+                                      <Value />
+                                    </TickMarkImage>
+                                    <Length>14</Length>
+                                    <Width>2</Width>
+                                    <Hidden>true</Hidden>
+                                  </GaugeMinorTickMarks>
+                                  <MaximumPin>
+                                    <PinLabel>
+                                      <Style>
+                                        <FontSize>12pt</FontSize>
+                                      </Style>
+                                      <DistanceFromScale>0</DistanceFromScale>
+                                    </PinLabel>
+                                    <Style>
+                                      <Border>
+                                        <Color>DimGray</Color>
+                                        <Style>Solid</Style>
+                                      </Border>
+                                      <BackgroundColor>WhiteSmoke</BackgroundColor>
+                                    </Style>
+                                    <Placement>Cross</Placement>
+                                    <TickMarkImage>
+                                      <Source>External</Source>
+                                      <Value />
+                                    </TickMarkImage>
+                                    <Length>6</Length>
+                                    <Width>6</Width>
+                                    <Shape>Circle</Shape>
+                                  </MaximumPin>
+                                  <MinimumPin>
+                                    <PinLabel>
+                                      <Style>
+                                        <FontSize>12pt</FontSize>
+                                      </Style>
+                                      <DistanceFromScale>0</DistanceFromScale>
+                                    </PinLabel>
+                                    <Style>
+                                      <Border>
+                                        <Color>DimGray</Color>
+                                        <Style>Solid</Style>
+                                      </Border>
+                                      <BackgroundColor>WhiteSmoke</BackgroundColor>
+                                    </Style>
+                                    <Placement>Cross</Placement>
+                                    <TickMarkImage>
+                                      <Source>External</Source>
+                                      <Value />
+                                    </TickMarkImage>
+                                    <Length>6</Length>
+                                    <Width>6</Width>
+                                    <Shape>Circle</Shape>
+                                  </MinimumPin>
+                                  <ScaleLabels>
+                                    <Style>
+                                      <FontSize>12pt</FontSize>
+                                      <Color>#404040</Color>
+                                    </Style>
+                                    <Interval>0.3</Interval>
+                                    <IntervalOffset>NaN</IntervalOffset>
+                                    <DistanceFromScale>1</DistanceFromScale>
+                                    <RotateLabels>true</RotateLabels>
+                                    <Hidden>true</Hidden>
+                                    <UseFontPercent>true</UseFontPercent>
+                                  </ScaleLabels>
+                                  <Width>0</Width>
+                                </RadialScale>
+                              </GaugeScales>
+                              <BackFrame>
+                                <Style>
+                                  <Border>
+                                    <Style>None</Style>
+                                  </Border>
+                                  <BackgroundColor>WhiteSmoke</BackgroundColor>
+                                  <BackgroundGradientType>DiagonalLeft</BackgroundGradientType>
+                                  <BackgroundGradientEndColor>Gainsboro</BackgroundGradientEndColor>
+                                  <BackgroundHatchType>None</BackgroundHatchType>
+                                  <ShadowOffset>0pt</ShadowOffset>
+                                </Style>
+                                <FrameStyle>Edged</FrameStyle>
+                                <FrameShape>CustomSemiCircularN1</FrameShape>
+                                <FrameBackground>
+                                  <Style>
+                                    <BackgroundColor>WhiteSmoke</BackgroundColor>
+                                    <BackgroundGradientType>DiagonalLeft</BackgroundGradientType>
+                                    <BackgroundGradientEndColor>Gray</BackgroundGradientEndColor>
+                                    <BackgroundHatchType>None</BackgroundHatchType>
+                                  </Style>
+                                </FrameBackground>
+                                <FrameImage>
+                                  <Source>External</Source>
+                                  <Value />
+                                </FrameImage>
+                              </BackFrame>
+                              <ClipContent>true</ClipContent>
+                              <TopImage>
+                                <Source>External</Source>
+                                <Value />
+                              </TopImage>
+                              <AspectRatio>1.48</AspectRatio>
+                              <Height>100</Height>
+                              <Width>100</Width>
+                            </RadialGauge>
+                          </RadialGauges>
+                          <AutoLayout>true</AutoLayout>
+                          <BackFrame>
+                            <Style>
+                              <Border>
+                                <Style>None</Style>
+                              </Border>
+                              <BackgroundColor>Gainsboro</BackgroundColor>
+                              <BackgroundGradientType>DiagonalLeft</BackgroundGradientType>
+                              <BackgroundGradientEndColor>Gray</BackgroundGradientEndColor>
+                              <BackgroundHatchType>None</BackgroundHatchType>
+                              <ShadowOffset>0pt</ShadowOffset>
+                            </Style>
+                            <FrameBackground>
+                              <Style>
+                                <BackgroundColor>Silver</BackgroundColor>
+                                <BackgroundGradientType>DiagonalLeft</BackgroundGradientType>
+                                <BackgroundGradientEndColor>Gray</BackgroundGradientEndColor>
+                                <BackgroundHatchType>None</BackgroundHatchType>
+                              </Style>
+                            </FrameBackground>
+                            <FrameImage>
+                              <Source>External</Source>
+                              <Value />
+                            </FrameImage>
+                          </BackFrame>
+                          <TopImage>
+                            <Source>External</Source>
+                            <Value />
+                          </TopImage>
+                          <DataSetName>uspReportsProgramStatus_OHPrgm_PS</DataSetName>
+                          <Style>
+                            <Border>
+                              <Style>Solid</Style>
+                            </Border>
+                          </Style>
+                        </GaugePanel>
+                      </CellContents>
+                    </TablixCell>
+                  </TablixCells>
+                </TablixRow>
+              </TablixRows>
+            </TablixBody>
+            <TablixColumnHierarchy>
+              <TablixMembers>
+                <TablixMember />
+                <TablixMember />
+              </TablixMembers>
+            </TablixColumnHierarchy>
+            <TablixRowHierarchy>
+              <TablixMembers>
+                <TablixMember />
+                <TablixMember />
+              </TablixMembers>
+            </TablixRowHierarchy>
+            <KeepTogether>true</KeepTogether>
+            <DataSetName>uspReportsProgramStatus_OHPrgm_PS</DataSetName>
+            <Top>1.28125in</Top>
+            <Left>0.54167in</Left>
+            <Height>1.51041in</Height>
+            <Width>9.12488in</Width>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+            </Style>
+          </Tablix>
+          <Textbox Name="textbox1">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>="Status Report as of: " &amp; Parameters!ParmReportFinishDate.Value</Value>
+                    <Style>
+                      <FontFamily>Tahoma</FontFamily>
+                      <FontSize>8pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Right</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>textbox1</rd:DefaultName>
+            <Top>0.19861in</Top>
+            <Left>8.17495in</Left>
+            <Height>0.20139in</Height>
+            <Width>1.49159in</Width>
+            <ZIndex>1</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <BottomBorder>
+                <Color>Black</Color>
+                <Width>1pt</Width>
+              </BottomBorder>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="textbox91">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>Program Health Report</Value>
+                    <Style>
+                      <FontFamily>Tahoma</FontFamily>
+                      <FontSize>14pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>SteelBlue</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Center</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <Top>0.09986in</Top>
+            <Left>3.48465in</Left>
+            <Height>0.30014in</Height>
+            <Width>3.06703in</Width>
+            <ZIndex>2</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Image Name="PerViewHeader2">
+            <Source>Embedded</Source>
+            <Value>PerView_logo_small_154x29</Value>
+            <Sizing>FitProportional</Sizing>
+            <Top>0.09986in</Top>
+            <Left>0.54167in</Left>
+            <Height>0.31404in</Height>
+            <Width>1.65972in</Width>
+            <ZIndex>3</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+            </Style>
+          </Image>
+        </ReportItems>
+        <Height>5.98958in</Height>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+        </Style>
+      </Body>
+      <Width>10.41133in</Width>
+      <Page>
+        <PageFooter>
+          <Height>2.79375in</Height>
+          <PrintOnFirstPage>true</PrintOnFirstPage>
+          <PrintOnLastPage>true</PrintOnLastPage>
+          <Style>
+            <Border>
+              <Style>None</Style>
+            </Border>
+          </Style>
+        </PageFooter>
+        <PageHeight>6.5in</PageHeight>
+        <PageWidth>11in</PageWidth>
+        <LeftMargin>0.15in</LeftMargin>
+        <TopMargin>0.15in</TopMargin>
+        <BottomMargin>0.15in</BottomMargin>
+        <Style />
+      </Page>
+    </ReportSection>
+  </ReportSections>
+  <ReportParameters>
+    <ReportParameter Name="UserID">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>=User!UserID</Value>
+        </Values>
+      </DefaultValue>
+      <Hidden>true</Hidden>
+    </ReportParameter>
+    <ReportParameter Name="ParmProjectsAllowed">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <DataSetReference>
+          <DataSetName>dsProjectsAllowed</DataSetName>
+          <ValueField>Proj_UID_Allowed</ValueField>
+        </DataSetReference>
+      </DefaultValue>
+      <Prompt>ParmProjectsAllowed</Prompt>
+      <Hidden>true</Hidden>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>dsProjectsAllowed</DataSetName>
+          <ValueField>Proj_UID_Allowed</ValueField>
+          <LabelField>ProjectName</LabelField>
+        </DataSetReference>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
+    </ReportParameter>
+    <ReportParameter Name="ParmParentProgram">
+      <DataType>String</DataType>
+      <Prompt>Program:</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>Programs</DataSetName>
+          <ValueField>Parent_Program</ValueField>
+          <LabelField>Parent_Program</LabelField>
+        </DataSetReference>
+      </ValidValues>
+      <UsedInQuery>True</UsedInQuery>
+    </ReportParameter>
+    <ReportParameter Name="ParmProjects">
+      <DataType>String</DataType>
+      <Prompt>Projects:</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>Projects</DataSetName>
+          <ValueField>Value</ValueField>
+          <LabelField>ProjectName</LabelField>
+        </DataSetReference>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
+      <UsedInQuery>True</UsedInQuery>
+    </ReportParameter>
+    <ReportParameter Name="ParmBaselineNonBaseline">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>Finish Date</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>Baseline Non Baseline</Prompt>
+      <ValidValues>
+        <ParameterValues>
+          <ParameterValue>
+            <Value>TaskFinishDate</Value>
+            <Label>Finish Date</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>TaskBaselineFinish</Value>
+            <Label>Baseline Finish Date</Label>
+          </ParameterValue>
+        </ParameterValues>
+      </ValidValues>
+      <UsedInQuery>True</UsedInQuery>
+    </ReportParameter>
+    <ReportParameter Name="ParmReportFinishDate">
+      <DataType>DateTime</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>=DateAdd("d", 0, Today())</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>Report Finish Date</Prompt>
+    </ReportParameter>
+  </ReportParameters>
+  <EmbeddedImages>
+    <EmbeddedImage Name="PerView_logo_small_154x29">
+      <MIMEType>image/jpeg</MIMEType>
+      <ImageData>/9j/4AAQSkZJRgABAQEBLAEsAAD/7QAsUGhvdG9zaG9wIDMuMAA4QklNA+0AAAAAABABLAAAAAEAAQEsAAAAAQAB/+ERNEV4aWYAAE1NACoAAAAIAAgBDgACAAAABgAACHoBGgAFAAAAAQAACIABGwAFAAAAAQAACIgBKAADAAAAAQACAAABMQACAAAAGAAACJCHaQAEAAAAAQAACKicmwABAAAADAAAESDqHAAHAAAIDAAAAG4AAAAAHOoAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABQcmlu
+dAABLAAAAAEAAAEsAAAAAQAAQWRvYmUgSWxsdXN0cmF0b3IgQ1M1LjEAAAWQAwACAAAAFAAAEPaQBAACAAAAFAAAEQqSkQACAAAAAzAwAACSkgACAAAAAzAwAADqHAAHAAAIDAAACOoAAAAAHOoAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAyMDEzOjAyOjE1IDE2OjE1OjAwADIwMTM6MDI6MTUgMTY6MTU6MDAAAABQAHIAaQBuAHQAAAD/4gxYSUNDX1BST0ZJTEUAAQEAAAxITGlubwIQ
+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
+3AXcit0Q3ZbeHN6i3ynfr+A24L3hROHM4lPi2+Nj4+vkc+T85YTmDeaW5x/nqegy6LzpRunQ6lvq5etw6/vshu0R7ZzuKO6070DvzPBY8OXxcvH/8ozzGfOn9DT0wvVQ9d72bfb794r4Gfio+Tj5x/pX+uf7d/wH/Jj9Kf26/kv+3P9t////4Qv7aHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLwA8P3hwYWNrZXQgYmVnaW49J++7vycgaWQ9J1c1TTBNcENlaGlIenJlU3pOVGN6a2M5ZCc/Pg0KPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyI+PHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj48cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0idXVpZDpmYWY1YmRkNS1iYTNkLTExZGEtYWQzMS1kMzNkNzUxODJmMWIiIHhtbG5zOnhtcD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyI+PHhtcDpDcmVhdG9yVG9vbD5BZG9iZSBJbGx1c3RyYXRvciBDUzUuMTwveG1wOkNyZWF0b3JUb29sPjx4bXA6Q3JlYXRlRGF0ZT4yMDEzLTAyLTE1VDE2OjE1OjAwPC94bXA6Q3JlYXRlRGF0ZT48L3JkZjpEZXNjcmlwdGlvbj48cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0idXVpZDpmYWY1YmRkNS1iYTNkLTExZGEtYWQzMS1kMzNkNzUxODJmMWIiIHhtbG5zOmRjPSJodHRwOi8vcHVybC5vcmcvZGMvZWxlbWVudHMvMS4xLyIvPjxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PSJ1dWlkOmZhZjViZGQ1LWJhM2QtMTFkYS1hZDMxLWQzM2Q3NTE4MmYxYiIg
+eG1sbnM6ZGM9Imh0dHA6Ly9wdXJsLm9yZy9kYy9lbGVtZW50cy8xLjEvIj48ZGM6dGl0bGU+PHJkZjpBbHQgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj48cmRmOmxpIHhtbDpsYW5nPSJ4LWRlZmF1bHQiPlByaW50PC9yZGY6bGk+PC9yZGY6QWx0Pg0KCQkJPC9kYzp0aXRsZT48ZGM6ZGVzY3JpcHRpb24+PHJkZjpBbHQgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj48cmRmOmxpIHhtbDpsYW5nPSJ4LWRlZmF1bHQiPlByaW50PC9yZGY6bGk+PC9yZGY6QWx0Pg0KCQkJPC9kYzpkZXNjcmlwdGlvbj48L3JkZjpEZXNjcmlwdGlvbj48L3JkZjpSREY+PC94OnhtcG1ldGE+DQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+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</ImageData>
+    </EmbeddedImage>
+  </EmbeddedImages>
+  <rd:ReportUnitType>Inch</rd:ReportUnitType>
+  <rd:ReportServerUrl>https://perview.app.parallon.com/PWA/ProjectBICenter</rd:ReportServerUrl>
+  <rd:ReportID>6101ee80-58a5-489c-b677-81019b883268</rd:ReportID>
+</Report>

@@ -53,8 +53,8 @@
   </ItemGroup>
   <ItemGroup>
     <Report Include="Portfolio Status (Client - HCA).rdl" />
-    <Report Include="Report1.rdl" />
-    <Report Include="Report2.rdl" />
+    <Report Include="Program Overall Health Report.rdl" />
+    <Report Include="Program Status Report 2.0.rdl" />
     <Report Include="Upgraded Portfolio Status (Client - HCA))_Staging.rdl" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Reporting Services\Microsoft.ReportingServices.MSBuilder.targets" />
